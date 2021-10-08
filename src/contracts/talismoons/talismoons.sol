@@ -47,7 +47,10 @@ contract Talismoons is
     uint256 _tokenId
   )
     external
+    payable
   {
+    require(msg.value == 0.1 ether, "Amount needs to be equal to 0.1 Ether");
+    _transferEther(owner);
     super._mint(_to, _tokenId);
     emit Mint(msg.sender, _tokenId);
   }
