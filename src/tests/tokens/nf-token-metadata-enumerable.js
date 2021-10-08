@@ -10,12 +10,15 @@ describe('nf-token-enumerable', function() {
   const uri1 = `${baseUri}${id1}`;
   const uri2 = `${baseUri}${id2}`;
   const uri3 = `${baseUri}${id3}`;
+  const newBaseUri = 'http://talismoons_new.com/';
+  const newUri1 = `${newBaseUri}${id1}`;
 
   beforeEach(async () => {
     const nftContract = await ethers.getContractFactory('NFTokenMetadataEnumerableTestMock');
     nfToken = await nftContract.deploy(
       'Foo',
       'F',
+      baseUri
     );
     [owner, bob, jane, sara] = await ethers.getSigners();
     await nfToken.deployed();
@@ -33,6 +36,18 @@ describe('nf-token-enumerable', function() {
 
   it('returns the correct contract symbol', async function() {
     expect(await nfToken.symbol()).to.equal('F');
+  });
+
+  it('correctly sets baseUri on deploy', async function() {
+    expect(await nfToken.baseUri()).to.equal(baseUri);
+    await nfToken.connect(owner).mint(bob.address, id1);
+    expect(await nfToken.tokenURI(id1)).to.equal(uri1);
+  });
+
+  it('correctly updates baseUri', async function() {
+    await nfToken.connect(owner).setBaseUri(newBaseUri);
+    await nfToken.connect(owner).mint(bob.address, id1);
+    expect(await nfToken.tokenURI(id1)).to.equal(newUri1);
   });
 
   it('returns the correct NFT id 1 url', async function() {

@@ -6,12 +6,15 @@ describe('nf-token-metadata', function() {
   const id1 = 1;
   const baseUri = 'http://talismoons.com/';
   const uri1 = `${baseUri}${id1}`;
+  const newBaseUri = 'http://talismoons_new.com/';
+  const newUri1 = `${newBaseUri}${id1}`;
 
   beforeEach(async () => {
     const nftContract = await ethers.getContractFactory('NFTokenMetadataTestMock');
     nfToken = await nftContract.deploy(
       'Foo',
       'F',
+      baseUri
     );
     [owner, bob] = await ethers.getSigners();
     await nfToken.deployed();
@@ -31,9 +34,16 @@ describe('nf-token-metadata', function() {
     expect(await nfToken.symbol()).to.equal('F');
   });
 
-  it('correctly sets baseUri', async function() {
-    await nfToken.connect(owner).setBaseUri(baseUri);
+  it('correctly sets baseUri on deploy', async function() {
     expect(await nfToken.baseUri()).to.equal(baseUri);
+    await nfToken.connect(owner).mint(bob.address, id1);
+    expect(await nfToken.tokenURI(id1)).to.equal(uri1);
+  });
+
+  it('correctly updates baseUri', async function() {
+    await nfToken.connect(owner).setBaseUri(newBaseUri);
+    await nfToken.connect(owner).mint(bob.address, id1);
+    expect(await nfToken.tokenURI(id1)).to.equal(newUri1);
   });
 
   it('throws when non owner tries to set baseUri', async function() {
