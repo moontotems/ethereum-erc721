@@ -84,7 +84,7 @@ contract Talismoons is
     super._burn(_tokenId);
   }
 
-   /**
+  /**
    * @dev Set base URI for computing {tokenURI}.
    * @param _baseUri The new BaseUri.
    */
@@ -180,7 +180,7 @@ contract Talismoons is
     NFTokenEnumerable._addNFToken(_to, _tokenId);
   }
 
-   /**
+  /**
    * @dev Helper function that gets NFT count of owner. This is needed for overriding in enumerable
    * extension to remove double storage(gas optimization) of owner nft count.
    * @param _owner Address for whom to query the count.
