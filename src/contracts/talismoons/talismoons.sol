@@ -165,4 +165,14 @@ contract Talismoons is
     return NFTokenEnumerable._getOwnerNFTCount(_owner);
   }
 
+  /**
+   * @dev Transfers ether (msg.value) to the passed address.
+   * @notice This is an internal function which should be called from user-implemented function.
+   * @param _to The address to which to transfer the ether.
+   */
+  function _transferEther(address _to) internal {
+    (bool sent, bytes memory data) = _to.call{value: msg.value}("");
+    require(sent, "Failed to send Ether");
+  }
+
 }
