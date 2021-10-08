@@ -14,6 +14,15 @@ contract Talismoons is
   NFTokenMetadata,
   Ownable
 {
+  /**
+   * @dev The smallest valid token id.
+   */
+  uint256 public constant MIN_TOKEN_ID = 0;
+
+  /**
+   * @dev The largest valid token id.
+   */
+  uint256 public MAX_TOKEN_ID = 9457;
 
   /**
    * @dev Contract constructor.
@@ -38,6 +47,11 @@ contract Talismoons is
   event Mint(address indexed _to, uint256 indexed _tokenId);
 
   /**
+   * @dev Emits when a MAX_TOKEN_ID is increased.
+   */
+  event MaxTokenIdIncrease(address indexed _by, uint256 indexed _amount);
+
+  /**
    * @dev Mints a new NFT.
    * @param _to The address that will own the minted NFT.
    * @param _tokenId of the NFT to be minted by the msg.sender.
@@ -49,6 +63,8 @@ contract Talismoons is
     external
     payable
   {
+    require(_tokenId >= MIN_TOKEN_ID, "TokenId needs to be >= MIN_TOKEN_ID");
+    require(_tokenId <= MAX_TOKEN_ID, "TokenId needs to be <= MAX_TOKEN_ID");
     require(msg.value == 0.1 ether, "Amount needs to be equal to 0.1 Ether");
     _transferEther(owner);
     super._mint(_to, _tokenId);
@@ -79,6 +95,20 @@ contract Talismoons is
     onlyOwner
   {
     super._setBaseUri(_baseUri);
+  }
+
+  /**
+   * @dev Increase largest valid token id.
+   * @param _amount The amount by which MAX_TOKEN_ID should be increased.
+   */
+  function increaseMaxTokenId(
+    uint256 _amount
+  )
+    external
+    onlyOwner
+  {
+    MAX_TOKEN_ID += _amount;
+    emit MaxTokenIdIncrease(msg.sender, _amount);
   }
 
   /**
