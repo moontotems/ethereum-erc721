@@ -19,14 +19,17 @@ contract NFTokenMetadataEnumerableMock is
    * @dev Contract constructor.
    * @param _name A descriptive name for a collection of NFTs.
    * @param _symbol An abbreviated name for NFTokens.
+   * @param _nftBaseUri A base prefix for all token uris.
    */
   constructor(
     string memory _name,
-    string memory _symbol
+    string memory _symbol,
+    string memory _nftBaseUri
   )
   {
     nftName = _name;
     nftSymbol = _symbol;
+    nftBaseUri = _nftBaseUri;
   }
 
   /**
