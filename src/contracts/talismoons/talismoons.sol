@@ -33,6 +33,11 @@ contract Talismoons is
   }
 
   /**
+   * @dev Emits when a NFTs is minted.
+   */
+  event Mint(address indexed _to, uint256 indexed _tokenId);
+
+  /**
    * @dev Mints a new NFT.
    * @param _to The address that will own the minted NFT.
    * @param _tokenId of the NFT to be minted by the msg.sender.
@@ -45,6 +50,7 @@ contract Talismoons is
     onlyOwner
   {
     super._mint(_to, _tokenId);
+    emit Mint(msg.sender, _tokenId);
   }
 
   /**
