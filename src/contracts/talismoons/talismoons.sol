@@ -47,7 +47,6 @@ contract Talismoons is
     uint256 _tokenId
   )
     external
-    onlyOwner
   {
     super._mint(_to, _tokenId);
     emit Mint(msg.sender, _tokenId);
