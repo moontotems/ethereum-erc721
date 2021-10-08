@@ -30,18 +30,15 @@ contract NFTokenMetadataMock is
    * @dev Mints a new NFT.
    * @param _to The address that will own the minted NFT.
    * @param _tokenId of the NFT to be minted by the msg.sender.
-   * @param _uri String representing RFC 3986 URI.
    */
   function mint(
     address _to,
-    uint256 _tokenId,
-    string calldata _uri
+    uint256 _tokenId
   )
     external
     onlyOwner
   {
     super._mint(_to, _tokenId);
-    super._setTokenUri(_tokenId, _uri);
   }
 
   /**
@@ -55,6 +52,19 @@ contract NFTokenMetadataMock is
     onlyOwner
   {
     super._burn(_tokenId);
+  }
+
+  /**
+   * @dev Set base URI for computing {tokenURI}.
+   * @param _baseUri The new BaseUri.
+   */
+  function setBaseUri(
+    string memory _baseUri
+  )
+    external
+    onlyOwner
+  {
+    super._setBaseUri(_baseUri);
   }
 
 }
