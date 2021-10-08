@@ -15,14 +15,4 @@ contract NFTokenMetadataEnumerableTestMock is
   {
   }
 
-  function checkUri(
-    uint256 _tokenId
-  )
-    external
-    view
-    returns (string memory)
-  {
-    return idToUri[_tokenId];
-  }
-
 }

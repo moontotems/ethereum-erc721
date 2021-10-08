@@ -4,7 +4,8 @@ const { expect } = require('chai');
 describe('nf-token-metadata', function() {
   let nfToken, owner, bob;
   const id1 = 1;
-  const uri1 = 'http://0xcert.org/1';
+  const baseUri = 'http://talismoons.com/';
+  const uri1 = `${baseUri}${id1}`;
 
   beforeEach(async () => {
     const nftContract = await ethers.getContractFactory('NFTokenMetadataTestMock');
@@ -12,7 +13,7 @@ describe('nf-token-metadata', function() {
       'Foo',
       'F',
     );
-    [ owner, bob] = await ethers.getSigners();
+    [owner, bob] = await ethers.getSigners();
     await nfToken.deployed();
   });
 
@@ -30,9 +31,19 @@ describe('nf-token-metadata', function() {
     expect(await nfToken.symbol()).to.equal('F');
   });
 
+  it('correctly sets baseUri', async function() {
+    await nfToken.connect(owner).setBaseUri(baseUri);
+    expect(await nfToken.baseUri()).to.equal(baseUri);
+  });
+
+  it('throws when non owner tries to set baseUri', async function() {
+    await expect(nfToken.connect(bob).setBaseUri(baseUri)).to.be.revertedWith('018001');
+  });
+
   it('correctly mints a NFT', async function() {
-    expect(await nfToken.connect(owner).mint(bob.address, id1, uri1)).to.emit(nfToken, 'Transfer');
+    expect(await nfToken.connect(owner).mint(bob.address, id1)).to.emit(nfToken, 'Transfer');
     expect(await nfToken.balanceOf(bob.address)).to.equal(1);
+    await nfToken.connect(owner).setBaseUri(baseUri);
     expect(await nfToken.tokenURI(id1)).to.equal(uri1);
   });
 
@@ -41,11 +52,11 @@ describe('nf-token-metadata', function() {
   });
 
   it('correctly burns a NFT', async function() {
-    await nfToken.connect(owner).mint(bob.address, id1, uri1);
+    await nfToken.connect(owner).mint(bob.address, id1);
     expect(await nfToken.connect(owner).burn(id1)).to.emit(nfToken, 'Transfer');
     expect(await nfToken.balanceOf(bob.address)).to.equal(0);
     await expect(nfToken.ownerOf(id1)).to.be.revertedWith('003002');
-    expect(await nfToken.checkUri(id1)).to.equal('');
+    await expect(nfToken.tokenURI(id1)).to.be.revertedWith('003002');
   });
 
-});  
+});

@@ -6,9 +6,10 @@ describe('nf-token-enumerable', function() {
   const id1 = 123;
   const id2 = 124;
   const id3 = 125;
-  const uri1 = 'http://0xcert.org/1';
-  const uri2 = 'http://0xcert.org/2';
-  const uri3 = 'http://0xcert.org/3';
+  const baseUri = 'http://talismoons.com/';
+  const uri1 = `${baseUri}${id1}`;
+  const uri2 = `${baseUri}${id2}`;
+  const uri3 = `${baseUri}${id3}`;
 
   beforeEach(async () => {
     const nftContract = await ethers.getContractFactory('NFTokenMetadataEnumerableTestMock');
@@ -16,7 +17,7 @@ describe('nf-token-enumerable', function() {
       'Foo',
       'F',
     );
-    [ owner, bob, jane, sara] = await ethers.getSigners();
+    [owner, bob, jane, sara] = await ethers.getSigners();
     await nfToken.deployed();
   });
 
@@ -35,7 +36,8 @@ describe('nf-token-enumerable', function() {
   });
 
   it('returns the correct NFT id 1 url', async function() {
-    await nfToken.connect(owner).mint(bob.address, id1, uri1);
+    await nfToken.connect(owner).setBaseUri(baseUri);
+    await nfToken.connect(owner).mint(bob.address, id1);
     expect(await nfToken.tokenURI(id1)).to.equal(uri1);
   });
 
@@ -44,39 +46,39 @@ describe('nf-token-enumerable', function() {
   });
 
   it('correctly mints a NFT', async function() {
-    expect(await nfToken.connect(owner).mint(bob.address, id1, uri1)).to.emit(nfToken, 'Transfer');
+    expect(await nfToken.connect(owner).mint(bob.address, id1)).to.emit(nfToken, 'Transfer');
     expect(await nfToken.balanceOf(bob.address)).to.equal(1);
     expect(await nfToken.totalSupply()).to.equal(1);
   });
 
   it('returns the correct token by index', async function() {
-    await nfToken.connect(owner).mint(bob.address, id1, uri1);
-    await nfToken.connect(owner).mint(bob.address, id2, uri2);
-    await nfToken.connect(owner).mint(bob.address, id3, uri3);
+    await nfToken.connect(owner).mint(bob.address, id1);
+    await nfToken.connect(owner).mint(bob.address, id2);
+    await nfToken.connect(owner).mint(bob.address, id3);
     expect(await nfToken.tokenByIndex(0)).to.equal(id1);
     expect(await nfToken.tokenByIndex(1)).to.equal(id2);
     expect(await nfToken.tokenByIndex(2)).to.equal(id3);
   });
 
   it('throws when trying to get token by non-existing index', async function() {
-    await nfToken.connect(owner).mint(bob.address, id1, uri1);
+    await nfToken.connect(owner).mint(bob.address, id1);
     await expect(nfToken.tokenByIndex(1)).to.be.revertedWith('005007');
   });
 
   it('returns the correct token of owner by index', async function() {
-    await nfToken.connect(owner).mint(bob.address, id1, uri1);
-    await nfToken.connect(owner).mint(bob.address, id2, uri2);
-    await nfToken.connect(owner).mint(sara.address, id3, uri3);
+    await nfToken.connect(owner).mint(bob.address, id1);
+    await nfToken.connect(owner).mint(bob.address, id2);
+    await nfToken.connect(owner).mint(sara.address, id3);
     expect(await nfToken.tokenOfOwnerByIndex(bob.address, 1)).to.equal(id2);
   });
 
   it('throws when trying to get token of owner by non-existing index', async function() {
-    await nfToken.connect(owner).mint(bob.address, id1, uri1);
+    await nfToken.connect(owner).mint(bob.address, id1);
     await expect(nfToken.tokenOfOwnerByIndex(bob.address, 1)).to.be.revertedWith('005007');
   });
 
   it('correctly burns a NFT', async function() {
-    await nfToken.connect(owner).mint(bob.address, id1, uri1);
+    await nfToken.connect(owner).mint(bob.address, id1);
     expect(await nfToken.connect(owner).burn(id1)).to.emit(nfToken, 'Transfer');
     expect(await nfToken.balanceOf(bob.address)).to.equal(0);
     await expect(nfToken.ownerOf(id1)).to.be.revertedWith('003002');
