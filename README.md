@@ -1,5 +1,15 @@
 ![Build Status](https://travis-ci.org/0xcert/ethereum-erc721.svg?branch=master)&nbsp;[![codecov](https://codecov.io/gh/0xcert/ethereum-erc721/branch/master/graph/badge.svg?token=F0tgRHyWSM)](https://codecov.io/gh/0xcert/ethereum-erc721)&nbsp;[![NPM Version](https://badge.fury.io/js/@0xcert%2Fethereum-erc721.svg)](https://www.npmjs.com/package/@0xcert/ethereum-erc721)&nbsp;[![Dependencies Status](https://david-dm.org/0xcert/ethereum-erc721.svg)](https://david-dm.org/0xcert/ethereum-erc721)&nbsp;[![Bug Bounty](https://img.shields.io/badge/bounty-open-2930e8.svg)](https://github.com/0xcert/ethereum-erc721/blob/master/BUG_BOUNTY.md)
 
+# Moon Totems
+
+## Changes to base contracts
+
+- NFT Metadata: Switch from token individual uris to baseUri
+
+## Moon Totems Contract
+
+- Checkout `moontotems` [branch](https://github.com/moontotems/ethereum-erc721/tree/moontotems).
+
 # ERC-721 Token — Reference Implementation
 
 This is the complete reference implementation of the [ERC-721](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md) non-fungible token standard for the Ethereum and Wanchain blockchains. It is also compatible with other EVM compatible chains like Binance Smart Chain (BSC), Avalanche (AVAX) etc. This is an open-source project, complete with [Hardhat](https://hardhat.org/) testing.
