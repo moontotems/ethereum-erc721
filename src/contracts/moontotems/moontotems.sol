@@ -5,10 +5,6 @@ import "../tokens/nf-token-metadata.sol";
 import "../tokens/nf-token-enumerable.sol";
 import "../ownership/ownable.sol";
 
-/**
- * @dev This is an example contract implementation of NFToken with enumerable and metadata
- * extensions.
- */
 contract MoonTotems is
   NFTokenEnumerable,
   NFTokenMetadata,
@@ -23,6 +19,11 @@ contract MoonTotems is
    * @dev The largest valid token id.
    */
   uint256 public MAX_TOKEN_ID = 9457;
+
+  /**
+   * @dev The price for minting a totem.
+   */
+  uint256 public TOTEM_MINT_PRICE = 100000000000000000; // 0.1 ETH
 
   /**
    * @dev Contract constructor.
@@ -52,6 +53,11 @@ contract MoonTotems is
   event MaxTokenIdIncrease(address indexed _by, uint256 indexed _amount);
 
   /**
+   * @dev Emits when a TOTEM_MINT_PRICE is updated.
+   */
+  event TotemMintPriceUpdate(address indexed _by, uint256 indexed _amount);
+
+  /**
    * @dev Mints a new NFT.
    * @param _to The address that will own the minted NFT.
    * @param _tokenId of the NFT to be minted by the msg.sender.
@@ -65,9 +71,23 @@ contract MoonTotems is
   {
     require(_tokenId >= MIN_TOKEN_ID, "TokenId needs to be >= MIN_TOKEN_ID");
     require(_tokenId <= MAX_TOKEN_ID, "TokenId needs to be <= MAX_TOKEN_ID");
-    require(msg.value == 0.1 ether, "Amount needs to be equal to 0.1 ETH");
+    require(msg.value == TOTEM_MINT_PRICE, "Amount needs to be equal to TOTEM_MINT_PRICE");
     super._mint(_to, _tokenId);
     emit Mint(msg.sender, _tokenId);
+  }
+
+  /**
+   * @dev Updates the price for minting a totem.
+   * @param _totemMintPrice The new price in wei.
+   */
+  function setNewMintPrice(
+    uint256 _totemMintPrice
+  )
+    external
+    onlyOwner
+  {
+    TOTEM_MINT_PRICE = _totemMintPrice;
+    emit TotemMintPriceUpdate(msg.sender, _totemMintPrice);
   }
 
   /**
