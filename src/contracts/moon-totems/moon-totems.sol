@@ -113,7 +113,7 @@ contract MoonTotems is
 
   /**
    * @dev Set base URI for computing {tokenURI}.
-   * @param _baseUri The new BaseUri.
+   * @param _baseUri The new baseUri.
    */
   function setBaseUri(
     string memory _baseUri
