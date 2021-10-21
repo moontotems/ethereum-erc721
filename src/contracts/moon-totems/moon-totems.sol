@@ -18,7 +18,7 @@ contract MoonTotems is
   /**
    * @dev The largest valid token id.
    */
-  uint256 public MAX_TOKEN_ID = 9457;
+  uint256 public constant MAX_TOKEN_ID = 9457;
 
   /**
    * @dev The price for minting a totem.
@@ -48,12 +48,7 @@ contract MoonTotems is
   event Mint(address indexed _to, uint256 indexed _tokenId);
 
   /**
-   * @dev Emits when a MAX_TOKEN_ID is increased.
-   */
-  event MaxTokenIdIncrease(address indexed _by, uint256 indexed _amount);
-
-  /**
-   * @dev Emits when a TOTEM_MINT_PRICE is updated.
+   * @dev Emits when TOTEM_MINT_PRICE is updated.
    */
   event TotemMintPriceUpdate(address indexed _by, uint256 indexed _amount);
 
@@ -114,20 +109,6 @@ contract MoonTotems is
     onlyOwner
   {
     super._setBaseUri(_baseUri);
-  }
-
-  /**
-   * @dev Increase largest valid token id.
-   * @param _amount The amount by which MAX_TOKEN_ID should be increased.
-   */
-  function increaseMaxTokenId(
-    uint256 _amount
-  )
-    external
-    onlyOwner
-  {
-    MAX_TOKEN_ID += _amount;
-    emit MaxTokenIdIncrease(msg.sender, _amount);
   }
 
   /**
