@@ -55,7 +55,7 @@ contract MoonTotems is
 
   /**
    * @dev Requirements that have to be met for minting to work.
-   * @param _tokenId ID of the NFT to validate.
+   * @param _tokenId ID of the NFT to mint.
    */
   modifier canMint(
     uint256 _tokenId
