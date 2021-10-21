@@ -31,16 +31,16 @@ describe('nf-token', function() {
   });
 
   it('throws when trying to get count of NFTs owned by 0x0 address', async function() {
-    await expect(nfToken.balanceOf(zeroAddress)).to.be.revertedWith('003001');
+    await expect(nfToken.balanceOf(zeroAddress)).to.be.revertedWith('ZERO_ADDRESS');
   });
 
   it('throws when trying to mint 2 NFTs with the same ids', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
-    await expect(nfToken.connect(owner).mint(bob.address, id1)).to.be.revertedWith('003006');
+    await expect(nfToken.connect(owner).mint(bob.address, id1)).to.be.revertedWith('NFT_ALREADY_EXISTS');
   });
 
   it('throws when trying to mint NFT to 0x0 address', async function() {
-    await expect(nfToken.connect(owner).mint(zeroAddress, id1)).to.be.revertedWith('003001');
+    await expect(nfToken.connect(owner).mint(zeroAddress, id1)).to.be.revertedWith('ZERO_ADDRESS');
   });
 
   it('finds the correct owner of NFToken id', async function() {
@@ -49,7 +49,7 @@ describe('nf-token', function() {
   });
 
   it('throws when trying to find owner od non-existing NFT id', async function() {
-    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('003002');
+    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('NOT_VALID_NFT');
   });
 
   it('correctly approves account', async function() {
@@ -66,12 +66,12 @@ describe('nf-token', function() {
   });
 
   it('throws when trying to get approval of non-existing NFT id', async function() {
-    await expect(nfToken.getApproved(id1)).to.be.revertedWith('003002');
+    await expect(nfToken.getApproved(id1)).to.be.revertedWith('NOT_VALID_NFT');
   });
 
   it('throws when trying to approve NFT ID from a third party', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
-    await expect(nfToken.connect(sara).approve(sara.address, id1)).to.be.revertedWith('003003');
+    await expect(nfToken.connect(sara).approve(sara.address, id1)).to.be.revertedWith('NOT_OWNER_OR_OPERATOR');
   });
 
   it('correctly sets an operator', async function() {
@@ -115,20 +115,20 @@ describe('nf-token', function() {
 
   it('throws when trying to transfer NFT as an address that is not owner, approved or operator', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
-    await expect(nfToken.connect(sara).transferFrom(bob.address, jane.address, id1)).to.be.revertedWith('003004');
+    await expect(nfToken.connect(sara).transferFrom(bob.address, jane.address, id1)).to.be.revertedWith('NOT_OWNER_APPROVED_OR_OPERATOR');
   });
 
   it('throws when trying to transfer NFT to a zero address', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
-    await expect(nfToken.connect(bob).transferFrom(bob.address, zeroAddress, id1)).to.be.revertedWith('003001');
+    await expect(nfToken.connect(bob).transferFrom(bob.address, zeroAddress, id1)).to.be.revertedWith('ZERO_ADDRESS');
   });
 
   it('throws when trying to transfer an invalid NFT', async function() {
-    await expect(nfToken.connect(bob).transferFrom(bob.address, sara.address, id1)).to.be.revertedWith('003004');
+    await expect(nfToken.connect(bob).transferFrom(bob.address, sara.address, id1)).to.be.revertedWith('NOT_OWNER_APPROVED_OR_OPERATOR');
   });
 
   it('throws when trying to transfer an invalid NFT', async function() {
-    await expect(nfToken.connect(bob).transferFrom(bob.address, sara.address, id1)).to.be.revertedWith('003004');
+    await expect(nfToken.connect(bob).transferFrom(bob.address, sara.address, id1)).to.be.revertedWith('NOT_OWNER_APPROVED_OR_OPERATOR');
   });
 
   it('correctly safe transfers NFT from owner', async function() {
@@ -172,18 +172,18 @@ describe('nf-token', function() {
     await nfToken.connect(owner).mint(bob.address, id1);
     expect(await nfToken.connect(owner).burn(id1)).to.emit(nfToken, 'Transfer');
     expect(await nfToken.balanceOf(bob.address)).to.equal(0);
-    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('003002');
+    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('NOT_VALID_NFT');
   });
 
   it('throws when trying to burn non existent NFT', async function() {
-    await expect(nfToken.connect(owner).burn(id1)).to.be.revertedWith('003002');
+    await expect(nfToken.connect(owner).burn(id1)).to.be.revertedWith('NOT_VALID_NFT');
   });
 
   // it.only('safeTransfer does not call onERC721Received to constructing contract', async function() {
   //   const sendsToSelfOnConstructContract = await ethers.getContractFactory('SendsToSelfOnConstruct');
   //   const sendsToSelfOnConstruct = await sendsToSelfOnConstructContract.deploy();
   //   expect(await sendsToSelfOnConstruct.deployed().deployTransaction).to.emit(sendsToSelfOnConstructContract, 'Transfer');
-  
+
   //   console.log('here');
   //   // console.log(log);
   //   // console.log(sendsToSelfOnConstruct); No Receive event, 2x Transfer

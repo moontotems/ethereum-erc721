@@ -47,7 +47,7 @@ describe('nf-token-metadata', function() {
   });
 
   it('throws when non owner tries to set baseUri', async function() {
-    await expect(nfToken.connect(bob).setBaseUri(baseUri)).to.be.revertedWith('018001');
+    await expect(nfToken.connect(bob).setBaseUri(baseUri)).to.be.revertedWith('NOT_CURRENT_OWNER');
   });
 
   it('correctly mints a NFT', async function() {
@@ -58,15 +58,15 @@ describe('nf-token-metadata', function() {
   });
 
   it('throws when trying to get URI of invalid NFT ID', async function() {
-    await expect(nfToken.tokenURI(id1)).to.be.revertedWith('003002');
+    await expect(nfToken.tokenURI(id1)).to.be.revertedWith('NOT_VALID_NFT');
   });
 
   it('correctly burns a NFT', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
     expect(await nfToken.connect(owner).burn(id1)).to.emit(nfToken, 'Transfer');
     expect(await nfToken.balanceOf(bob.address)).to.equal(0);
-    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('003002');
-    await expect(nfToken.tokenURI(id1)).to.be.revertedWith('003002');
+    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('NOT_VALID_NFT');
+    await expect(nfToken.tokenURI(id1)).to.be.revertedWith('NOT_VALID_NFT');
   });
 
 });

@@ -57,7 +57,7 @@ describe('nf-token-enumerable', function() {
   });
 
   it('throws when trying to get URI of invalid NFT ID', async function() {
-    await expect(nfToken.tokenURI(id1)).to.be.revertedWith('003002');
+    await expect(nfToken.tokenURI(id1)).to.be.revertedWith('NOT_VALID_NFT');
   });
 
   it('correctly mints a NFT', async function() {
@@ -77,7 +77,7 @@ describe('nf-token-enumerable', function() {
 
   it('throws when trying to get token by non-existing index', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
-    await expect(nfToken.tokenByIndex(1)).to.be.revertedWith('005007');
+    await expect(nfToken.tokenByIndex(1)).to.be.revertedWith('INVALID_INDEX');
   });
 
   it('returns the correct token of owner by index', async function() {
@@ -89,16 +89,16 @@ describe('nf-token-enumerable', function() {
 
   it('throws when trying to get token of owner by non-existing index', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
-    await expect(nfToken.tokenOfOwnerByIndex(bob.address, 1)).to.be.revertedWith('005007');
+    await expect(nfToken.tokenOfOwnerByIndex(bob.address, 1)).to.be.revertedWith('INVALID_INDEX');
   });
 
   it('correctly burns a NFT', async function() {
     await nfToken.connect(owner).mint(bob.address, id1);
     expect(await nfToken.connect(owner).burn(id1)).to.emit(nfToken, 'Transfer');
     expect(await nfToken.balanceOf(bob.address)).to.equal(0);
-    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('003002');
-    await expect(nfToken.tokenByIndex(0)).to.be.revertedWith('005007');
-    await expect(nfToken.tokenOfOwnerByIndex(bob.address, 0)).to.be.revertedWith('005007');
+    await expect(nfToken.ownerOf(id1)).to.be.revertedWith('NOT_VALID_NFT');
+    await expect(nfToken.tokenByIndex(0)).to.be.revertedWith('INVALID_INDEX');
+    await expect(nfToken.tokenOfOwnerByIndex(bob.address, 0)).to.be.revertedWith('INVALID_INDEX');
   });
 
 });
