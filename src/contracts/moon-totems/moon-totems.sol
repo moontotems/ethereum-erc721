@@ -52,6 +52,21 @@ contract MoonTotems is
    */
   event TotemMintPriceUpdate(address indexed _by, uint256 indexed _amount);
 
+
+  /**
+   * @dev Requirements that have to be met for minting to work.
+   * @param _tokenId ID of the NFT to validate.
+   */
+  modifier canMint(
+    uint256 _tokenId
+  )
+  {
+    require(_tokenId >= MIN_TOKEN_ID, "TokenId needs to be >= MIN_TOKEN_ID");
+    require(_tokenId <= MAX_TOKEN_ID, "TokenId needs to be <= MAX_TOKEN_ID");
+    require(msg.value == TOTEM_MINT_PRICE, "Amount needs to be equal to TOTEM_MINT_PRICE");
+    _;
+  }
+
   /**
    * @dev Mints a new NFT.
    * @param _to The address that will own the minted NFT.
@@ -63,10 +78,8 @@ contract MoonTotems is
   )
     external
     payable
+    canMint(_tokenId)
   {
-    require(_tokenId >= MIN_TOKEN_ID, "TokenId needs to be >= MIN_TOKEN_ID");
-    require(_tokenId <= MAX_TOKEN_ID, "TokenId needs to be <= MAX_TOKEN_ID");
-    require(msg.value == TOTEM_MINT_PRICE, "Amount needs to be equal to TOTEM_MINT_PRICE");
     super._mint(_to, _tokenId);
     emit Mint(msg.sender, _tokenId);
   }
