@@ -65,8 +65,7 @@ contract MoonTotems is
   {
     require(_tokenId >= MIN_TOKEN_ID, "TokenId needs to be >= MIN_TOKEN_ID");
     require(_tokenId <= MAX_TOKEN_ID, "TokenId needs to be <= MAX_TOKEN_ID");
-    require(msg.value == 0.1 ether, "Amount needs to be equal to 0.1 Ether");
-    _transferEther(owner);
+    require(msg.value == 0.1 ether, "Amount needs to be equal to 0.1 ETH");
     super._mint(_to, _tokenId);
     emit Mint(msg.sender, _tokenId);
   }
@@ -109,6 +108,14 @@ contract MoonTotems is
   {
     MAX_TOKEN_ID += _amount;
     emit MaxTokenIdIncrease(msg.sender, _amount);
+  }
+
+  /**
+   * @dev Withdraw contract balance to contract owner.
+   */
+  function withdraw() public onlyOwner {
+    uint balance = address(this).balance;
+    payable(msg.sender).transfer(balance);
   }
 
   /**
@@ -195,16 +202,6 @@ contract MoonTotems is
     returns (uint256)
   {
     return NFTokenEnumerable._getOwnerNFTCount(_owner);
-  }
-
-  /**
-   * @dev Transfers ether (msg.value) to the passed address.
-   * @notice This is an internal function which should be called from user-implemented function.
-   * @param _to The address to which to transfer the ether.
-   */
-  function _transferEther(address _to) internal {
-    (bool sent, bytes memory data) = _to.call{value: msg.value}("");
-    require(sent, "Failed to send Ether");
   }
 
 }
