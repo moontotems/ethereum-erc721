@@ -4,9 +4,9 @@ const { expect } = require('chai');
 describe('nf-token-metadata', function() {
   let nfToken, owner, bob;
   const id1 = 1;
-  const baseUri = 'http://talismoons.com/';
+  const baseUri = 'http://moontotems.com/';
   const uri1 = `${baseUri}${id1}`;
-  const newBaseUri = 'http://talismoons_new.com/';
+  const newBaseUri = 'http://moontotems_new.com/';
   const newUri1 = `${newBaseUri}${id1}`;
 
   beforeEach(async () => {

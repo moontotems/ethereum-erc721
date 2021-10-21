@@ -9,7 +9,7 @@ import "../ownership/ownable.sol";
  * @dev This is an example contract implementation of NFToken with enumerable and metadata
  * extensions.
  */
-contract Talismoons is
+contract MoonTotems is
   NFTokenEnumerable,
   NFTokenMetadata,
   Ownable

@@ -6,11 +6,11 @@ describe('nf-token-enumerable', function() {
   const id1 = 123;
   const id2 = 124;
   const id3 = 125;
-  const baseUri = 'http://talismoons.com/';
+  const baseUri = 'http://moontotems.com/';
   const uri1 = `${baseUri}${id1}`;
   const uri2 = `${baseUri}${id2}`;
   const uri3 = `${baseUri}${id3}`;
-  const newBaseUri = 'http://talismoons_new.com/';
+  const newBaseUri = 'http://moontotems_new.com/';
   const newUri1 = `${newBaseUri}${id1}`;
 
   beforeEach(async () => {
