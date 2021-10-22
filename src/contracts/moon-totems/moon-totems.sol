@@ -122,7 +122,7 @@ contract MoonTotems is
 
   /**
    * @dev Removes a NFT from owner.
-   * @param _tokenId Which NFT we want to remove.
+   * @param _tokenId Which NFT should get removed.
    */
   function burn(
     uint256 _tokenId
