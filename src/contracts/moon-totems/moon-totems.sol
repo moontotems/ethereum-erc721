@@ -21,6 +21,11 @@ contract MoonTotems is
   uint256 public constant MAX_TOKEN_ID = 9457;
 
   /**
+   * @dev Whether minting is allowed.
+   */
+  bool public MINT_IS_ACTIVE = false;
+
+  /**
    * @dev The price for minting a totem.
    */
   uint256 public TOTEM_MINT_PRICE = 100000000000000000; // 0.1 ETH
@@ -52,6 +57,11 @@ contract MoonTotems is
    */
   event TotemMintPriceUpdate(address indexed _by, uint256 indexed _amount);
 
+  /**
+   * @dev Emits when MINT_IS_ACTIVE is updated.
+   */
+  event MintFlagUpdate(address indexed _by, bool indexed _active);
+
 
   /**
    * @dev Requirements that have to be met for minting to work.
@@ -61,6 +71,7 @@ contract MoonTotems is
     uint256 _tokenId
   )
   {
+    require(MINT_IS_ACTIVE, "Minting is not active");
     require(_tokenId >= MIN_TOKEN_ID, "TokenId needs to be >= MIN_TOKEN_ID");
     require(_tokenId <= MAX_TOKEN_ID, "TokenId needs to be <= MAX_TOKEN_ID");
     require(msg.value == TOTEM_MINT_PRICE, "Amount needs to be equal to TOTEM_MINT_PRICE");
@@ -96,6 +107,17 @@ contract MoonTotems is
   {
     TOTEM_MINT_PRICE = _totemMintPrice;
     emit TotemMintPriceUpdate(msg.sender, _totemMintPrice);
+  }
+
+  /**
+   * @dev Toggle whether minting is allowed.
+   */
+  function flipMintFlag()
+    external
+    onlyOwner
+  {
+    MINT_IS_ACTIVE = !MINT_IS_ACTIVE;
+    emit MintFlagUpdate(msg.sender, MINT_IS_ACTIVE);
   }
 
   /**
