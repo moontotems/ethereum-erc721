@@ -121,14 +121,14 @@ contract MoonTotems is
   }
 
   /**
-   * @dev Removes a NFT from owner.
+   * @dev Removes a NFT from the owner and allows the NFT to be minted again.
    * @param _tokenId Which NFT should get removed.
    */
   function burn(
     uint256 _tokenId
   )
     external
-    onlyOwner
+    canTransfer(_tokenId)
   {
     super._burn(_tokenId);
   }
