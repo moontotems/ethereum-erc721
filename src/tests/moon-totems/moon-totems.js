@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 describe('moon-totems', function() {
   let nfToken, owner, bob, jane, sara;
-  const name = 'Moon Totems';
+  const name = 'MoonTotems';
   const symbol = 'TOTEM';
 
   const MIN_TOKEN_ID = 0;
